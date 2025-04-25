@@ -1,12 +1,31 @@
-# React + Vite
+# 404.js - Content Sharing Platform 📝📸✨
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modular, responsive, and dynamic content-sharing platform where users can sign up, create blog posts, react through comments, and explore articles using advanced filtering features.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🔐 **Authentication** (without JWT) - Sign up and log in
+- 📝 **Article Management** - Create, edit, delete articles (title, image, category, content)
+- 💬 **Comment System** - Add and remove comments on articles
+- 🔎 **Dynamic Filtering** - Search by title, category, and keywords
+- 🌐 **RxJS Integration** - Manage data streams with `from`, `map`, `filter`
+- ✅ **Form Validation** - Using `Formik` or `React Hook Form`
+- 🧱 **Modular Architecture** - With reusable components & API services
+- ⚡ **Live Data Fetching** - Using `useEffect` to load data from JSON Server
+- 🎨 **Responsive Design** - Styled with Tailwind CSS
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React.js, Tailwind CSS
+- **State & Forms**: React Hooks, Formik or React Hook Form
+- **Data Management**: Axios, RxJS
+- **Backend (Mock API)**: JSON Server
+
+---
+
+## 📂 Project Structure
+
