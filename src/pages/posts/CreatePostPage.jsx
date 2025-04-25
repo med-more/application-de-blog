@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { toast } from "react-toastify"
+import { createPost } from "../../services/postService"
 import { Upload, X, Save } from "lucide-react"
 
 const categoryOptions = [
@@ -19,7 +20,7 @@ const categoryOptions = [
   "Personal",
 ]
 
-const CreatePostPage = () => {
+const CreatePostPage = ({ user }) => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [imagePreview, setImagePreview] = useState("")
@@ -84,14 +85,20 @@ const CreatePostPage = () => {
     try {
       const postData = {
         ...data,
+        userId: user.id,
+        author: user.username,
         tags,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        comments: [],
+        likes: 0,
       }
 
-      console.log("Post data (not sent):", postData)
-      toast.success("Post created locally (API removed).")
-      navigate("/posts")
+      const newPost = await createPost(postData)
+      toast.success("Post created successfully!")
+      navigate(`/posts/${newPost.id}`)
     } catch (error) {
-      toast.error("Failed to create post.")
+      toast.error("Failed to create post. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -114,8 +121,14 @@ const CreatePostPage = () => {
               placeholder="Enter a catchy title..."
               {...register("title", {
                 required: "Title is required",
-                minLength: { value: 3, message: "At least 3 characters" },
-                maxLength: { value: 100, message: "Less than 100 characters" },
+                minLength: {
+                  value: 3,
+                  message: "Title must be at least 3 characters",
+                },
+                maxLength: {
+                  value: 100,
+                  message: "Title must be less than 100 characters",
+                },
               })}
             />
             <div className="flex justify-between mt-1">
@@ -169,9 +182,7 @@ const CreatePostPage = () => {
                 Add
               </button>
             </div>
-            {tags.length >= 5 && (
-              <p className="text-xs text-amber-600 mt-1">Maximum of 5 tags reached</p>
-            )}
+            {tags.length >= 5 && <p className="text-xs text-amber-600 mt-1">Maximum of 5 tags reached</p>}
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {tags.map((tag, index) => (
@@ -201,7 +212,7 @@ const CreatePostPage = () => {
               {imagePreview ? (
                 <div className="space-y-2 text-center">
                   <img
-                    src={imagePreview}
+                    src={imagePreview || "/placeholder.svg"}
                     alt="Preview"
                     className="mx-auto h-40 object-cover rounded-md"
                   />
@@ -224,7 +235,7 @@ const CreatePostPage = () => {
                   <div className="flex text-sm text-gray-600 dark:text-gray-400">
                     <label
                       htmlFor="file-upload"
-                      className="relative cursor-pointer rounded-md font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300"
+                      className="relative cursor-pointer rounded-md font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 focus-within:outline-none"
                     >
                       <span>Upload a file</span>
                       <input
@@ -255,7 +266,10 @@ const CreatePostPage = () => {
               placeholder="Write your post content here..."
               {...register("content", {
                 required: "Content is required",
-                minLength: { value: 50, message: "Minimum 50 characters" },
+                minLength: {
+                  value: 50,
+                  message: "Content must be at least 50 characters",
+                },
               })}
             />
             {errors.content && <p className="form-error">{errors.content.message}</p>}
