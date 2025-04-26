@@ -6,6 +6,27 @@ import { useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import { Eye, EyeOff, UserPlus } from "lucide-react"
 import { registerUser } from "../../services/authService"
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup"
+
+const schema = yup.object().shape({
+  username: yup
+    .string()
+    .required("Username is required")
+    .min(3, "Username must be at least 3 characters"),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("Please confirm your password"),
+})
 
 const RegisterPage = ({ setUser }) => {
   const navigate = useNavigate()
@@ -17,7 +38,9 @@ const RegisterPage = ({ setUser }) => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
 
   const password = watch("password", "")
 
@@ -51,7 +74,6 @@ const RegisterPage = ({ setUser }) => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Username */}
           <div>
             <label htmlFor="username" className="form-label">
               Username
@@ -59,20 +81,13 @@ const RegisterPage = ({ setUser }) => {
             <input
               id="username"
               type="text"
-              className={form-input ${errors.username ? "border-red-500" : ""}}
+              className={`form-input ${errors.username ? "border-red-500" : ""}`}
               placeholder="johndoe"
-              {...register("username", {
-                required: "Username is required",
-                minLength: {
-                  value: 3,
-                  message: "Username must be at least 3 characters",
-                },
-              })}
+              {...register("username")}
             />
             {errors.username && <p className="form-error">{errors.username.message}</p>}
           </div>
 
-          {/* Email */}
           <div>
             <label htmlFor="email" className="form-label">
               Email
@@ -80,20 +95,13 @@ const RegisterPage = ({ setUser }) => {
             <input
               id="email"
               type="email"
-              className={form-input ${errors.email ? "border-red-500" : ""}}
+              className={`form-input ${errors.email ? "border-red-500" : ""}`}
               placeholder="your@email.com"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              })}
+              {...register("email")}
             />
             {errors.email && <p className="form-error">{errors.email.message}</p>}
           </div>
 
-          {/* Password */}
           <div>
             <label htmlFor="password" className="form-label">
               Password
@@ -102,15 +110,9 @@ const RegisterPage = ({ setUser }) => {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                className={form-input pr-10 ${errors.password ? "border-red-500" : ""}}
+                className={`form-input pr-10 ${errors.password ? "border-red-500" : ""}`}
                 placeholder="••••••••"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                })}
+                {...register("password")}
               />
               <button
                 type="button"
@@ -123,7 +125,6 @@ const RegisterPage = ({ setUser }) => {
             {errors.password && <p className="form-error">{errors.password.message}</p>}
           </div>
 
-          {/* Confirm Password */}
           <div>
             <label htmlFor="confirmPassword" className="form-label">
               Confirm Password
@@ -132,12 +133,9 @@ const RegisterPage = ({ setUser }) => {
               <input
                 id="confirmPassword"
                 type={showPassword ? "text" : "password"}
-                className={form-input pr-10 ${errors.confirmPassword ? "border-red-500" : ""}}
+                className={`form-input pr-10 ${errors.confirmPassword ? "border-red-500" : ""}`}
                 placeholder="••••••••"
-                {...register("confirmPassword", {
-                  required: "Please confirm your password",
-                  validate: (value) => value === password || "Passwords do not match",
-                })}
+                {...register("confirmPassword")}
               />
               <button
                 type="button"
@@ -150,7 +148,6 @@ const RegisterPage = ({ setUser }) => {
             {errors.confirmPassword && <p className="form-error">{errors.confirmPassword.message}</p>}
           </div>
 
-          {/* Submit Button */}
           <button type="submit" className="btn-primary w-full flex justify-center items-center" disabled={isLoading}>
             {isLoading ? (
               <span className="flex items-center">
