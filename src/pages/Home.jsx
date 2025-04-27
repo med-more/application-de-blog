@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { from } from "rxjs"
@@ -17,16 +15,14 @@ const HomePage = ({ user }) => {
   const [categories, setCategories] = useState([])
   const [activeFilters, setActiveFilters] = useState(false)
 
-  // Load posts
   useEffect(() => {
     setLoading(true)
     getAllPosts()
       .then((data) => {
         setPosts(data)
-        setFilteredPosts(data) // Initialize filteredPosts with all posts
+        setFilteredPosts(data) 
         setLoading(false)
 
-        // Extract unique categories
         const allCategories = [...new Set(data.map((post) => post.category))]
         setCategories(allCategories)
       })
@@ -36,20 +32,17 @@ const HomePage = ({ user }) => {
       })
   }, [])
 
-  // Filter posts using RxJS
   useEffect(() => {
     if (posts.length > 0) {
       const postsObservable = from(posts)
 
-      // Create combined filter with RxJS
       const filteredObservable = postsObservable.pipe(
         filter((post) => {
-          // Filter by category if selected
+        
           if (selectedCategory && post.category !== selectedCategory) {
             return false
           }
 
-          // Filter by search term
           if (searchTerm) {
             const searchLower = searchTerm.toLowerCase()
             return (
@@ -61,7 +54,7 @@ const HomePage = ({ user }) => {
 
           return true
         }),
-        // Sort by date descending
+        
         toArray(),
         map((postsArray) => 
           postsArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -87,7 +80,6 @@ const HomePage = ({ user }) => {
 
   return (
     <div className="space-y-8">
-      {/* Hero Section */}
       <section className="text-center py-12 px-4 rounded-2xl bg-gradient-to-r from-rose-100 to-teal-100 dark:from-rose-900/30 dark:to-teal-900/30">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-teal-600 dark:from-rose-400 dark:to-teal-400">
           Share Your World
@@ -111,13 +103,12 @@ const HomePage = ({ user }) => {
         )}
       </section>
 
-      {/* Filters Section */}
       <section className="space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <h2 className="text-2xl md:text-3xl font-bold">Latest Posts</h2>
 
           <div className="w-full md:w-auto flex flex-col md:flex-row gap-4">
-            {/* Search */}
+            
             <div className="relative w-full md:w-64">
               <input
                 type="text"
@@ -137,7 +128,6 @@ const HomePage = ({ user }) => {
               )}
             </div>
 
-            {/* Category Filter */}
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -153,7 +143,6 @@ const HomePage = ({ user }) => {
           </div>
         </div>
 
-        {/* Active Filters */}
         {activeFilters && (
           <div className="flex items-center space-x-2">
             <Filter size={16} className="text-gray-500" />
@@ -178,7 +167,6 @@ const HomePage = ({ user }) => {
         )}
       </section>
 
-      {/* Posts Grid */}
       <section>
         {loading ? (
           <div className="flex justify-center items-center py-20">
