@@ -98,10 +98,96 @@ const ProfilePage = ({ user, setUser }) => {
         </div>
 
         {editMode ? (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Form fields remain the same */}
-            {/* ... */}
-          </form>
+           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+           <div>
+             <label htmlFor="username" className="form-label">
+               Username
+             </label>
+             <input
+               id="username"
+               type="text"
+               className={`form-input ${errors.username ? "border-red-500" : ""}`}
+               {...register("username", {
+                 required: "Username is required",
+                 minLength: {
+                   value: 3,
+                   message: "Username must be at least 3 characters",
+                 },
+               })}
+             />
+             {errors.username && <p className="form-error">{errors.username.message}</p>}
+           </div>
+
+           <div>
+             <label htmlFor="email" className="form-label">
+               Email
+             </label>
+             <input
+               id="email"
+               type="email"
+               className={`form-input ${errors.email ? "border-red-500" : ""}`}
+               {...register("email", {
+                 required: "Email is required",
+                 pattern: {
+                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                   message: "Invalid email address",
+                 },
+               })}
+             />
+             {errors.email && <p className="form-error">{errors.email.message}</p>}
+           </div>
+
+           <div>
+             <label htmlFor="bio" className="form-label">
+               Bio
+             </label>
+             <textarea
+               id="bio"
+               rows="4"
+               className="form-input"
+               placeholder="Tell us about yourself..."
+               {...register("bio")}
+             ></textarea>
+           </div>
+
+           <div className="flex justify-end space-x-4 pt-2">
+             <button type="button" className="btn-outline" onClick={() => setEditMode(false)} disabled={savingProfile}>
+               Cancel
+             </button>
+             <button type="submit" className="btn-primary flex items-center" disabled={savingProfile}>
+               {savingProfile ? (
+                 <span className="flex items-center">
+                   <svg
+                     className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                   >
+                     <circle
+                       className="opacity-25"
+                       cx="12"
+                       cy="12"
+                       r="10"
+                       stroke="currentColor"
+                       strokeWidth="4"
+                     ></circle>
+                     <path
+                       className="opacity-75"
+                       fill="currentColor"
+                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                     ></path>
+                   </svg>
+                   Saving...
+                 </span>
+               ) : (
+                 <span className="flex items-center">
+                   <Save size={18} className="mr-2" />
+                   Save Changes
+                 </span>
+               )}
+             </button>
+           </div>
+         </form>
         ) : (
           <div className="space-y-6">
             <div className="flex items-center">
