@@ -1,4 +1,4 @@
-import { Heart, Coffee, Mail, Github, Linkedin } from "lucide-react";
+import { Heart, Coffee, Mail, Github, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -73,15 +73,15 @@ const Footer = () => {
                 <Github size={24} />
               </a>
 
-              {/* LinkedIn */}
+              {/* X */}
               <a
-                href="https://www.linkedin.com/in/basma-el-abassi-4494bb34b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                href="https://x.com/BabaMohamm30497?t=5zJcQvb0ssJAm0Va0Ee-JQ&s=09"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-600 dark:text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 transition-transform transform hover:scale-110 duration-300"
-                aria-label="LinkedIn"
+                aria-label="X"
               >
-                <Linkedin size={24} />
+                <X size={24} />
               </a>
             </div>
           </div>
